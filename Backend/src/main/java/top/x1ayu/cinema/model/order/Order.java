@@ -8,7 +8,9 @@ public class Order {
     private Long id;
     private Long movie_id;
     private Long payer_id;
+    private PriceRule PriceRule;
     private LocalDateTime order_time;
+    private LocalDateTime last_time;
     private BigDecimal total_price;
     private Integer ticket_count;
     private OrderStatus status;
@@ -16,15 +18,14 @@ public class Order {
 
     private List<Ticket> tickets;
 
-
     public enum OrderStatus {
         NOT_PAID,
         PAID,
         CHANGE_TICKET,
-        CANCELED,
+        CANCELLED,
         REFUNDED,
         CHANGED,
-        CANCELLED
+        VERIFIED
     }
 
     public enum PlayerType {

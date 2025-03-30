@@ -11,5 +11,6 @@ public class Seat {
     private Long id;
     private long hall_id;
     private Integer row;
-    private Integer col;
+    private Integer start;
+    private Integer end;
 }

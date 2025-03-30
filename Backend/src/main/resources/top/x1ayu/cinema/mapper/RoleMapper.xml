@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="top.x1ayu.cinema.mapper.RoleMapper">
+    <resultMap id="roleResultMap" type="top.x1ayu.cinema.model.user.Role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="perms" ofType="top.x1ayu.cinema.model.user.Perm" columnPrefix="perm_">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="getRoleById" resultMap="roleResultMap">
+        SELECT
+            r.id, r.name,
+            p.id AS perm_id, p.name AS perm_name
+        FROM role r
+        LEFT JOIN role_perm rp ON r.id = rp.role_id
+        LEFT JOIN perm p ON rp.perm_id = p.id
+        WHERE r.id = #{id}
+    </select>
+
+    <select id="getAllRoles" resultMap="roleResultMap">
+        SELECT
+            r.id, r.name,
+            p.id AS perm_id, p.name AS perm_name
+        FROM role r
+        LEFT JOIN role_perm rp ON r.id = rp.role_id
+        LEFT JOIN perm p ON rp.perm_id = p.id
+    </select>
+
+    <select id="getRoles" resultMap="roleResultMap">
+        SELECT
+            r.id, r.name,
+            p.id AS perm_id, p.name AS perm_name
+        FROM role r
+        LEFT JOIN role_perm rp ON r.id = rp.role_id
+        LEFT JOIN perm p ON rp.perm_id = p.id
+        <where>
+            <if test="id != null">
+                AND r.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND r.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

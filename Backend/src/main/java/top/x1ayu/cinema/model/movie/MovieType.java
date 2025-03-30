@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MovieType {
     private Integer id;
-    private Integer name;
+    private String name;
 }

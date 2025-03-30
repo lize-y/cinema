@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="top.x1ayu.cinema.mapper.ScheduleMapper">
+    <resultMap id="scheduleResultMap" type="top.x1ayu.cinema.model.movie.Schedule">
+        <id property="id" column="id"/>
+        <result property="movieId" column="movie_id"/>
+        <result property="hallId" column="hall_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="price" column="price"/>
+        <result property="status" column="status"/>
+        <result property="discount" column="discount"/>
+        <result property="detail" column="detail"/>
+    </resultMap>
+
+    <select id="getSchedules" resultMap="scheduleResultMap">
+      SELECT * FROM schedule
+      <where>
+        <if test="id != null">
+          AND id = #{id}
+        </if>
+        <if test="movieId!= null">
+          AND movie_id = #{movieId}
+        </if>
+        <if test="hallId!= null">
+          AND hall_id = #{hallId}
+        </if>
+        <if test="status!= null">
+          AND status = #{status}
+        </if>
+        <if test="startTime!= null">
+          AND start_time > #{startTime}
+        </if>
+        <if test="endTime!= null">
+          AND end_time <![CDATA[<]]> #{endTime}
+        </if>
+      </where>
+    </select>
+
+    <insert id="insert" parameterType="top.x1ayu.cinema.model.movie.Schedule">
+      INSERT INTO schedule (id, movie_id, hall_id, start_time, end_time, price, discount, detail, status)
+      VALUES (#{id}, #{movieId}, #{hallId}, #{startTime}, #{endTime}, #{price}, #{discount}, #{detail}, #{status})
+    </insert>
+
+    <update id="update" parameterType="top.x1ayu.cinema.model.movie.Schedule">
+        UPDATE schedule
+        <set>
+            <if test="movieId != null">
+              movie_id = #{movieId},
+            </if>
+            <if test="hallId != null">
+              hall_id = #{hallId},
+            </if>
+            <if test="startTime != null">
+              start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+               end_time = #{endTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus" parameterType="top.x1ayu.cinema.model.movie.Schedule">
+      UPDATE schedule
+      SET status = #{status}
+      WHERE id = #{id}
+    </update>
+</mapper>
