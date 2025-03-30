@@ -10,13 +10,13 @@ public class Order {
     private Long payer_id;
     private PriceRule PriceRule;
     private LocalDateTime order_time;
+    private LocalDateTime last_time;
     private BigDecimal total_price;
     private Integer ticket_count;
     private OrderStatus status;
     private PlayerType player_type;
 
     private List<Ticket> tickets;
-
 
     public enum OrderStatus {
         NOT_PAID,
