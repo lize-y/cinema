@@ -22,4 +22,5 @@ public interface PermMapper {
 
     @Delete("DELETE FROM perm WHERE id = #{id}")
     int deletePermById(@Param("id") Long id);
+
 }

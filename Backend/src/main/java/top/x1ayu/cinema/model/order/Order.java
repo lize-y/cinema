@@ -1,20 +1,27 @@
 package top.x1ayu.cinema.model.order;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     private Long id;
-    private Long movie_id;
-    private Long payer_id;
-    private PriceRule PriceRule;
-    private LocalDateTime order_time;
-    private LocalDateTime last_time;
-    private BigDecimal total_price;
-    private Integer ticket_count;
+    private Long movieId;
+    private Long payerId;
+    private LocalDateTime orderTime;
+    private BigDecimal payAmount;
+    private Integer ticketAmount;
     private OrderStatus status;
-    private PlayerType player_type;
+    private PayMechod payMethod;
+    private PriceRule priceRule;
+    private LocalDateTime lastChange;
+
 
     private List<Ticket> tickets;
 
@@ -28,7 +35,7 @@ public class Order {
         VERIFIED
     }
 
-    public enum PlayerType {
+    public enum PayMechod {
         CASH,
         ALIPAY,
         WECHAT,

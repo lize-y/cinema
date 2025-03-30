@@ -16,8 +16,8 @@ public class PriceRule {
     private Long id;
     private String name;
     private BigDecimal discount;
-    private LocalDateTime start_time;
-    private LocalDateTime end_time;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
-    private List<Movie> movie_id;
+    private List<Movie> movies;
 }

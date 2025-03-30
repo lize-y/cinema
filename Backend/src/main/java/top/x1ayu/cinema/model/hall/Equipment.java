@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Equipment {
     private Long id;
-    private Long hall_id;
-    private Long type_id;
+    private Long hallId;
+    private EquipType type;
     private String name;
     private EquipmentStatus status;
-    private LocalDateTime start_time;
-    private LocalDateTime last_check;
+    private LocalDateTime startTime;
+    private LocalDateTime lastCheck;
 
-    public enum EquipmentStatus {
+    public enum EquipmentStatus{
         //正常
         NORMAL,
         //维护中

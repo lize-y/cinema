@@ -1,72 +1,53 @@
 package top.x1ayu.cinema;
 
+import com.mysql.cj.result.LocalDateTimeValueFactory;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.x1ayu.cinema.mapper.ArtistMapper;
-import top.x1ayu.cinema.mapper.MovieMapper;
-import top.x1ayu.cinema.mapper.PermMapper;
-import top.x1ayu.cinema.mapper.ScheduleMapper;
-import top.x1ayu.cinema.model.movie.Artist;
-import top.x1ayu.cinema.model.movie.Movie;
-import top.x1ayu.cinema.model.movie.Schedule;
-import top.x1ayu.cinema.model.user.Perm;
+import top.x1ayu.cinema.mapper.*;
+import top.x1ayu.cinema.model.order.Order;
+import top.x1ayu.cinema.model.order.PriceRule;
 
+
+//import java.sql.Date;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Date;
 @SpringBootTest
 public class MapperTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MapperTest.class);
-
     @Autowired
     private ArtistMapper artistMapper;
-
     @Autowired
-    private MovieMapper movieMapper;
-
+    private HallMapper hallMapper;
     @Autowired
-    private ScheduleMapper scheduleMapper;
-
+    private SeatMapper seatMapper;
     @Autowired
-    private PermMapper permMapper;
+    private EquipmentTypeMapper equipmentTypeMapper;
+    @Autowired
+    private EquipmentMapper equipmentMapper;
+    @Autowired
+    private TicketMapper ticketMapper;
+    @Autowired
+    private OrderMapper orderMapper;
     @Test
     public void Artist_test() {
-        Artist artist = new Artist();
-        artist.setName("张三");
-        artistMapper.insertArtist(artist);
-        System.out.println(artist.getId());
-    }
-
-    @Test
-    public void Movie_test() {
-        System.out.println(movieMapper.getMovies(Movie.builder().name("熊").build()));
-    }
-
-    @Test
-    public void schedule_test() {
-        scheduleMapper.updateStatus(2L, Schedule.ScheduleStatus.disabled);
-        System.out.println(scheduleMapper.getSchedules(Schedule.builder().id(2L).build()));
-    }
-
-    @Test
-    public void perm_test() {
-        List<Perm> perms = permMapper.getAllPerms();
-        if (perms.isEmpty()) {
-            log.info("perms is null");
-        }
-        else {
-            for (Perm perm : perms) {
-                log.info("perm: {}", perm);
-            }
-        }
-//        Perm perm = Perm.builder().name("test").build();
-//        permMapper.insertPerm(perm);
-//        log.info("insert perm: {}", perm);
-//        log.info("get perm: {}", permMapper.getPermById(perm.getId()));
+        PriceRule priceRule = new PriceRule(new Long(2),"abab",BigDecimal.valueOf(0.60),LocalDateTime.of(2023,5,28,3,55,2),LocalDateTime.now(),null);
+//        Order order = new Order(new Long(1),new Long(1),new Long(111),LocalDateTime.now(),BigDecimal.valueOf(333),2, Order.OrderStatus.NOT_PAID, Order.PayMechod.CASH,priceRule,LocalDateTime.now(),null);
+        List<Order> order = orderMapper.getByPayerId(new Long(Id(new Long(123))));
+        order.forEach(order1 -> {
+            System.out.println(order1.getId());
+            System.out.println(order1.getMovieId());
+            System.out.println(order1.getPayerId());
+            System.out.println(order1.getOrderTime());
+            System.out.println(order1.getPayAmount());
+            System.out.println(order1.getTicketAmount());
+            System.out.println(order1.getPriceRule());
+            System.out.println(order1.get);
+            System.out.println(order1.getId());
+        });
     }
 }

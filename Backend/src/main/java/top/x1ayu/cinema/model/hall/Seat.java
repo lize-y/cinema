@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Seat {
-    private Long id;
-    private long hall_id;
+    private long id;
+    private long hallId;
     private Integer row;
-    private Integer start;
-    private Integer end;
+    private Integer startColumn;
+    private Integer endColumn;
 }

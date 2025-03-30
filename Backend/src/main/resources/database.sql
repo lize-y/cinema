@@ -1,10 +1,5 @@
--- 演员表
-CREATE TABLE IF NOT EXISTS `artist`(
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '演员ID',
-    `name` VARCHAR(32) NOT NULL COMMENT '演职人员姓名'
-);
-
 -- 电影表
+DROP TABLE IF EXISTS movie;
 CREATE TABLE IF NOT EXISTS `movie` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '电影id',
     `name` VARCHAR(64) NOT NULL COMMENT '电影名称',
@@ -19,47 +14,8 @@ CREATE TABLE IF NOT EXISTS `movie` (
     `key_disabled_date` DATETIME NOT NULL COMMENT '密钥失效时间'
 );
 
--- 创建电影类型表
-CREATE TABLE IF NOT EXISTS `movie_type` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '电影类型id',
-    `name` VARCHAR(32) NOT NULL COMMENT '电影类型名称'
-);
-
--- 创建电影-类型关联表（复合主键）
-CREATE TABLE IF NOT EXISTS `movie_type_conn` (
-    `movie_id` BIGINT NOT NULL COMMENT '电影id',
-    `type_id` BIGINT NOT NULL COMMENT '类型id',
-    PRIMARY KEY (`movie_id`, `type_id`),
-    FOREIGN KEY (`movie_id`) REFERENCES `movie`(`id`),
-    FOREIGN KEY (`type_id`) REFERENCES `movie_type`(`id`)
-);
-
--- 创建电影-导演关联表（复合主键）
-CREATE TABLE IF NOT EXISTS `movie_director` (
-    `movie_id` BIGINT NOT NULL COMMENT '电影id',
-    `artist_id` BIGINT NOT NULL COMMENT '导演id',
-    PRIMARY KEY (`movie_id`, `artist_id`),
-    FOREIGN KEY (`movie_id`) REFERENCES `movie`(`id`),
-    FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`)
-);
-
--- 创建电影-演员关联表（复合主键）
-CREATE TABLE IF NOT EXISTS `movie_artist` (
-    `movie_id` BIGINT NOT NULL COMMENT '电影id',
-    `artist_id` BIGINT NOT NULL COMMENT '演员id',
-    PRIMARY KEY (`movie_id`, `artist_id`),
-    FOREIGN KEY (`movie_id`) REFERENCES `movie`(`id`),
-    FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`)
-);
-
--- 创建影厅表
-CREATE TABLE IF NOT EXISTS `hall` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '影厅id',
-    `name` VARCHAR(32) NOT NULL COMMENT '影厅名称',
-    `seating` INT NOT NULL COMMENT '座位数'
-);
-
 -- 创建排片表
+-- DROP TABLE IF EXISTS schedule;
 CREATE TABLE IF NOT EXISTS `schedule` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '排片id',
     `movie_id` BIGINT NOT NULL COMMENT '电影id',
@@ -76,55 +32,69 @@ CREATE TABLE IF NOT EXISTS `schedule` (
     CHECK (`start_time` < `end_time`)
 );
 
--- 权限表
-CREATE TABLE IF NOT EXISTS `perm` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '权限id',
-    `name` VARCHAR(32) NOT NULL COMMENT '权限名称'
+-- 创建设备表
+-- DROP TABLE IF EXISTS equipment;
+DROP IF EXISTS `equipment`;
+CREATE TABLE IF NOT EXISTS `equipment` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '设备id',
+    `hall_id` BIGINT NOT NULL COMMENT '所属影厅id',
+    `type_id` BIGINT NOT NULL COMMENT '设备类型',
+    `name` VARCHAR(64) NOT NULL COMMENT '设备名称',
+    `status` ENUM('NORMAL','MAINTAINED','DISABLED') DEFAULT 'normal' NOT NULL COMMENT '状态：1:正常、2:维护中、3:已退役',
+    `start_time` DATETIME COMMENT '初次投用时间',
+    `last_check` DATETIME COMMENT '最后检修时间',
+    FOREIGN KEY (`hall_id`) REFERENCES `hall`(`id`),
+    FOREIGN KEY (`type_id`) REFERENCES `equip_type`(`id`)
 );
 
--- 角色表
-CREATE TABLE IF NOT EXISTS `role` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '角色id',
-    `name` VARCHAR(32) NOT NULL COMMENT '角色名称'
+-- 创建订单表
+DROP TABLE IF EXISTS order;
+CREATE TABLE IF NOT EXISTS `order` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '订单id',
+    `movie_id` BIGINT NOT NULL COMMENT '电影id',
+    `payer_id` BIGINT NOT NULL COMMENT '下单用户id',
+    `order_time` DATETIME NOT NULL COMMENT '下单时间',
+    `pay_amount` DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    `ticket_amount` INT NOT NULL COMMENT '电影票数',
+    `price_rule_id` BIGINT COMMENT '票价策略',
+    `pay_method` ENUM('CASH','WECHAT','ALIPAY','CREDIT_CARD') DEFAULT NULL COMMENT '支付方式：1:现金，2:微信，3:支付宝，4:信用卡',
+    `status` ENUM('NOT_PAID','PAID','CHANGE_TICKET','CANCELLED','REFUNDED','CHANGED','VERIFIED') DEFAULT 'NOT_PAID' NOT NULL COMMENT '状态：1:未支付，2:已支付，3:改签票，4:已核销，5:已改签，6:已退票，7:已取消',
+    FOREIGN KEY (`movie_id`) REFERENCES `movie`(`id`)
 );
 
--- 用户表
-CREATE TABLE IF NOT EXISTS `user`(
-    `id`         BIGINT AUTO_INCREMENT PRIMARY KEY             NOT NULL COMMENT '用户id',
-    `username`   VARCHAR(32)                                   NOT NULL COMMENT '用户名',
-    `password`   VARCHAR(64)                                   NOT NULL COMMENT '密码',
-    `email`      VARCHAR(32) COMMENT '邮箱',
-    `phone`      VARCHAR(15) COMMENT '手机',
-    `birthday`   DATE COMMENT '生日',
-    `sex`        ENUM ('male','female','other') DEFAULT 'male' NOT NULL COMMENT '性别：1:男、2:女',
-    `photo_path` VARCHAR(256) COMMENT '头像路径'
+-- 创建电影票表
+DROP TABLE IF EXISTS `order_ticket`;
+CREATE TABLE IF NOT EXISTS `order_ticket` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '电影票id',
+    `order_id` BIGINT NOT NULL COMMENT '所属订单id',
+    `schedule_id` BIGINT NOT NULL COMMENT '排片场次id',
+    `row` INT NOT NULL COMMENT '座位行',
+    `column` INT NOT NULL COMMENT '座位列',
+    `ticket_type` ENUM('STUDENT','NORMAL','ELDER') DEFAULT 'NORMAL' NOT NULL COMMENT '票价类型：1:学生票，2:普通票，3:老年票',
+    `ticket_price` DECIMAL(10,2) COMMENT '票价',
+    `ticket_status` ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED' NOT NULL COMMENT '电影票状态：1:有效，2:无效',
+    FOREIGN KEY (`order_id`) REFERENCES `order`(`id`),
+    FOREIGN KEY (`schedule_id`) REFERENCES `schedule`(`id`)
 );
 
--- 角色-权限关联表（复合主键）
-CREATE TABLE IF NOT EXISTS `role_perm` (
-    `role_id` BIGINT NOT NULL COMMENT '角色id',
-    `perm_id` BIGINT NOT NULL COMMENT '权限id',
-    PRIMARY KEY (`role_id`, `perm_id`),
-    FOREIGN KEY (`role_id`) REFERENCES `role`(`id`),
-    FOREIGN KEY (`perm_id`) REFERENCES `perm`(`id`)
+-- 创建票价策略表
+DROP TABLE IF EXISTS `price_rule`;
+CREATE TABLE IF NOT EXISTS `price_rule` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL COMMENT '票价策略id',
+    `rule_name` VARCHAR(32) NOT NULL COMMENT '策略名称',
+    `discount` DECIMAL(3,2) NOT NULL COMMENT '折扣',
+    `start_time` DATETIME NOT NULL COMMENT '开始时间',
+    `end_time` DATETIME NOT NULL COMMENT '结束时间',
+    CHECK (`start_time` < `end_time`)
 );
 
--- 用户-角色关联表（复合主键）
-CREATE TABLE IF NOT EXISTS `user_role` (
-    `user_id` BIGINT NOT NULL COMMENT '用户id',
-    `role_id` BIGINT NOT NULL COMMENT '角色id',
-    PRIMARY KEY (`user_id`, `role_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
-    FOREIGN KEY (`role_id`) REFERENCES `role`(`id`)
+-- 创建策略-电影类型关联表
+DROP TABLE IF EXISTS `movie_rule`;
+CREATE TABLE IF NOT EXISTS `movie_rule` (
+    `rule_id` BIGINT NOT NULL COMMENT '策略id',
+    `movie_id` BIGINT NOT NULL COMMENT '电影id',
+    PRIMARY KEY (`rule_id`, `movie_id`),
+    FOREIGN KEY (`rule_id`) REFERENCES `price_rule`(`id`),
+    FOREIGN KEY (`movie_id`) REFERENCES `movie`(`id`)
 );
 
--- 外键约束
-ALTER TABLE role_perm
-ADD CONSTRAINT fk_role_id
-FOREIGN KEY (role_id) REFERENCES role(id)
-ON DELETE CASCADE;
-
-ALTER TABLE user_role
-ADD CONSTRAINT fk_user_id
-FOREIGN KEY (user_id) REFERENCES user(id)
-ON DELETE CASCADE;

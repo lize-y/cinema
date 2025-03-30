@@ -8,7 +8,8 @@ public enum TicketType {
     student(0.8),
     child(0.6),
     senior(0.7),
-    group(0.8);
+    group(0.8),
+    normal(1);
 
     private final double discount;
 

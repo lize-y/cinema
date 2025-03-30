@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `equipment` (
     `hall_id` BIGINT NOT NULL COMMENT '所属影厅id',
     `type_id` BIGINT NOT NULL COMMENT '设备类型',
     `name` VARCHAR(64) NOT NULL COMMENT '设备名称',
-    `status` ENUM('normal','maintained','disabled') DEFAULT 'normal' NOT NULL COMMENT '状态：1:正常、2:维护中、3:已退役',
+    `status` ENUM('NORMAL','MAINTAINED','DISABLED') DEFAULT 'normal' NOT NULL COMMENT '状态：1:正常、2:维护中、3:已退役',
     `start_time` DATETIME COMMENT '初次投用时间',
     `last_check` DATETIME COMMENT '最后检修时间',
     FOREIGN KEY (`hall_id`) REFERENCES `hall`(`id`),

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.x1ayu.cinema.model.order.PriceRule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,4 +31,5 @@ public class Movie {
     private List<MovieType> movieTypes;
     private List<Artist> directors;
     private List<Artist> Artists;
+    private List<PriceRule> priceRules;
 }
