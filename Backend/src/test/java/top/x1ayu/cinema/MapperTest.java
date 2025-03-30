@@ -37,7 +37,7 @@ public class MapperTest {
     public void Artist_test() {
         PriceRule priceRule = new PriceRule(new Long(2),"abab",BigDecimal.valueOf(0.60),LocalDateTime.of(2023,5,28,3,55,2),LocalDateTime.now(),null);
 //        Order order = new Order(new Long(1),new Long(1),new Long(111),LocalDateTime.now(),BigDecimal.valueOf(333),2, Order.OrderStatus.NOT_PAID, Order.PayMechod.CASH,priceRule,LocalDateTime.now(),null);
-        List<Order> order = orderMapper.getByPayerId(new Long(Id(new Long(123))));
+        List<Order> order = orderMapper.getByPayerId(new Long(123));
         order.forEach(order1 -> {
             System.out.println(order1.getId());
             System.out.println(order1.getMovieId());
@@ -46,8 +46,8 @@ public class MapperTest {
             System.out.println(order1.getPayAmount());
             System.out.println(order1.getTicketAmount());
             System.out.println(order1.getPriceRule());
-            System.out.println(order1.get);
-            System.out.println(order1.getId());
+            System.out.println(order1.getPayMethod());
+            System.out.println(order1.getStatus());
         });
     }
 }
