@@ -9,7 +9,6 @@ public class Ticket {
     private Integer row;
     private Integer column;
     private TicketType TicketType;
-    private PriceRule PriceRule;
     private BigDecimal price;
     private TicketStatus status;
 

@@ -1,19 +1,15 @@
-package top.x1ayu.cinema.model.movie;
+package top.x1ayu.cinema.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class Movie {
+public class MovieDTO {
     private Long id;
     private String name;
     private String akaName;
@@ -25,9 +21,7 @@ public class Movie {
     private Integer duration;
     private String company;
     private LocalDateTime keyDisabledDate;
-
-    // 非数据库字段
-    private List<MovieType> movieTypes;
-    private List<Artist> directors;
-    private List<Artist> Artists;
+    private List<String> movieTypes;
+    private List<String> directors;
+    private List<String> Artists;
 }

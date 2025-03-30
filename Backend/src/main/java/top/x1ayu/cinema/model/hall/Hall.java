@@ -14,6 +14,6 @@ public class Hall {
     private String name;
     private Integer seating;
 
-    //没有的字段
     private List<Seat> Seats;
+    private List<Equipment> equipment;
 }
